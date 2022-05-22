@@ -19,7 +19,7 @@ def get_list_of_active_server_projects(service_url):
     return list_of_projects
 
 
-print(get_list_of_active_server_projects(client_serverproject))
+# print(get_list_of_active_server_projects(client_serverproject))
 
 
 def get_list_of_server_tms(service_url_tm):
@@ -34,17 +34,30 @@ def get_list_of_server_tms(service_url_tm):
     return list_of_tms
 
 
-print(get_list_of_server_tms(client_tm_management))
+# print(get_list_of_server_tms(client_tm_management))
 
 
-def get_list_of_server_users(service_url):
-    list_of_users = []
-    response = service_url.service.ListUsers(_soapheaders=[*headers])
+def get_user_entry_from_server(user_name):
+    client_memoq_users = Client(wsdl='https://dp-dhl.memoqworld.com:8081/memoqservices/security?wsdl')
+    response = client_memoq_users.service.ListUsers(_soapheaders=[*headers])
     for users in response:
         input_dict = helpers.serialize_object(users, dict)
-        list_of_users.append(input_dict["UserName"])
-    print(f"{len(list_of_users)} server users!")
-    return list_of_users
+        if input_dict["UserName"] == user_name:
+            return input_dict
 
 
-print(get_list_of_server_users(client_memoqusers))
+print(get_user_entry_from_server("cls.wecke"))
+
+
+def update_user_data_on_server(user_name, data_field, new_value):
+    client_memoq_users = Client(wsdl='https://dp-dhl.memoqworld.com:8081/memoqservices/security?wsdl')
+    user_entry = get_user_entry_from_server(user_name)
+    if data_field in user_entry:
+        user_entry[data_field] = new_value
+        client_memoq_users.service.UpdateUser(user_entry, _soapheaders=[*headers])
+        return user_entry
+    else:
+        print(f"{data_field} does not exist!")
+
+
+print(update_user_data_on_server("cls.wecke", "Address", "admin2"))
