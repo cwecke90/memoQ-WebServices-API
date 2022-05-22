@@ -8,7 +8,7 @@ client_tm_management = Client(wsdl='https://dp-dhl.memoqworld.com:8081/memoqserv
 client_memoqusers = Client(wsdl='https://dp-dhl.memoqworld.com:8081/memoqservices/security?wsdl')
 
 
-def list_active_server_projects(service_url):
+def get_list_of_active_server_projects(service_url):
     list_of_projects = []
     response = service_url.service.ListProjects(_soapheaders=[*headers])
     for projects in response:
@@ -19,7 +19,7 @@ def list_active_server_projects(service_url):
     return list_of_projects
 
 
-print(list_active_server_projects(client_serverproject))
+print(get_list_of_active_server_projects(client_serverproject))
 
 
 def get_list_of_server_tms(service_url_tm):
