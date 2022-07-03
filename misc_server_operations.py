@@ -1,5 +1,8 @@
 from zeep import Client, helpers
 from lxml import etree
+import os
+
+os.environ["https_proxy"] = "http://cloudproxy.dhl.com:10123"
 
 headers = etree.XML('<header><ApiKey>OfUcxbUHzaa40AHPOJL0vST3CDmtkn0wVlwC1Qe0</ApiKey></header>')
 
